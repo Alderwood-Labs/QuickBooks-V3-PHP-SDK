@@ -208,6 +208,26 @@ class OAuth2LoginHelper
     }
 
     /**
+     * Retrieve the users OpenID Connect profile
+     * @return array the user's profile
+     */
+    public function getUserInfo(String $url, String $accessToken)
+    {
+      $http_header = array(
+        'Accept' => 'application/json',
+        'Authorization' => 'Bearer ' . $accessToken,
+      );
+      $intuitResponse = $this->curlHttpClient->makeAPICall($url, CoreConstants::HTTP_GET, $http_header, null, null, true);
+      $this->faultHandler = $intuitResponse->getFaultHandler();
+      if($this->faultHandler) {
+          throw new ServiceException("Fetching User Info failed. Body: [" . $this->faultHandler->getResponseBody() . "].", $this->faultHandler->getHttpStatusCode());
+      }else{
+          $this->faultHandler = false;
+          return json_decode($intuitResponse->getBody(), true);
+      }
+    }
+
+    /**
      * Step 2 of OAuth 2 protocol. After you get authorization code, use this method to exchange an access token with it.
      * @param String $code            The Authorization Code returned to your redirect Uri
      * @param String RealmID          The Company ID that will be associated with the Acess Token. It does not use for exchange authorization Code to
@@ -365,7 +385,7 @@ class OAuth2LoginHelper
               $refreshToken = $json_body[CoreConstants::OAUTH2_REFRESH_GRANTYPE];
               $refreshTokenExpiresTime = $json_body[CoreConstants::X_REFRESH_TOKEN_EXPIRES_IN];
               $accessToken = $json_body[CoreConstants::ACCESS_TOKEN];
-              $idToken = $json_body[CoreConstants::ID_TOKEN];
+              $idToken = array_key_exists(CoreConstants::ID_TOKEN, $json_body) ? $json_body[CoreConstants::ID_TOKEN] : null;
               $this->checkIfEmptyValueReturned($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken);
               //If we have a response of OAuth 2 Access Token and the access token is not set, it must come from initial request. Create a dummy access token and update it.
               if(!isset($this->oauth2AccessToken)){
