@@ -1,6 +1,6 @@
 {
     "name": "wssi/quickbooks-v3-php-sdk",
-    "description": "The Official PHP SDK for QuickBooks Online Accounting API",
+    "description": "A Custom Version of the PHP SDK for QuickBooks Online Accounting API",
     "type": "library",
     "keywords": ["api", "http", "rest", "quickbooks", "smallbusiness"],
     "homepage": "http://developer.intuit.com",
@@ -20,8 +20,8 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "hlu2",
-            "email": "Hao_Lu@intuit.com"
+            "name": "Cory Vernon",
+            "email": "cory@snapdsk.com"
         }
     ],
     "suggest": {
