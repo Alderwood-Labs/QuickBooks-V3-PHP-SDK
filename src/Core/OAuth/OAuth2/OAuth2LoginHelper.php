@@ -365,12 +365,13 @@ class OAuth2LoginHelper
               $refreshToken = $json_body[CoreConstants::OAUTH2_REFRESH_GRANTYPE];
               $refreshTokenExpiresTime = $json_body[CoreConstants::X_REFRESH_TOKEN_EXPIRES_IN];
               $accessToken = $json_body[CoreConstants::ACCESS_TOKEN];
+              $idToken = $json_body[CoreConstants::ID_TOKEN];
               $this->checkIfEmptyValueReturned($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken);
               //If we have a response of OAuth 2 Access Token and the access token is not set, it must come from initial request. Create a dummy access token and update it.
               if(!isset($this->oauth2AccessToken)){
                   $this->oauth2AccessToken = new OAuth2AccessToken($this->getClientID(), $this->getClientSecret());
               }
-              $this->oauth2AccessToken->updateAccessToken($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken);
+              $this->oauth2AccessToken->updateAccessToken($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken, $idToken);
               if(isset($realmID)){
                    $this->oauth2AccessToken->setRealmID($realmID);
               }

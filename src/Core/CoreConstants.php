@@ -398,6 +398,7 @@ class CoreConstants
     const EXPIRES_IN = "expires_in";
     const X_REFRESH_TOKEN_EXPIRES_IN = "x_refresh_token_expires_in";
     const ACCESS_TOKEN = "access_token";
+    const ID_TOKEN = "id_token";
 
     public static function getCertPath(){
         return dirname(__FILE__) . "/OAuth/OAuth2/certs/cacert.pem"; //Pem certification Key Path

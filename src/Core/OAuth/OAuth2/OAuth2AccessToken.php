@@ -48,6 +48,12 @@ class OAuth2AccessToken{
     private $refresh_token;
 
     /**
+     * OAuth 2 ID Token. A token used to validate a user during the OpenID Connect Protocol
+     * @var String $id_token;
+     */
+    private $id_token;
+
+    /**
      * OAuth 2 access Token key expire time. It is a date representation. Use current time plus one hour
      * @var String $accessTokenExpiresAt         A String representation of OAuth 2 access token expiration time
      */
@@ -132,6 +138,14 @@ class OAuth2AccessToken{
      */
     public function setRefreshToken($refreshToken){
       $this->refresh_token = $refreshToken;
+    }
+
+    /**
+     * Set the OAuth 2 id token.
+     * @param String $idToken
+     */
+    public function setIdToken($idToken) {
+      $this->id_token = $idToken;
     }
 
     /**
@@ -281,6 +295,15 @@ class OAuth2AccessToken{
     }
 
     /**
+     * Return the id token
+     * @return String
+     */
+    public function getIdToken() {
+      if(isset($this->id_token) && !empty($this->id_token))  return $this->id_token;
+      else throw new SdkException("The OAuth 2 ID Token is not set in the Access Token Object.");
+    }
+
+    /**
      * Return the access Token
      * @return String
      */
@@ -344,13 +367,14 @@ class OAuth2AccessToken{
      * @param int      $refreshTokenExpiresTime   The number of seconds that refresh token expired. Always 8726400 seconds.
      * @param String   $accessToken               The OAuth 2 Access Token returned from refresh token API call or generated from a new request.
      */
-    public function updateAccessToken($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken){
+    public function updateAccessToken($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken, $idToken){
        $this->setAccessToken($accessToken);
        $this->setRefreshToken($refreshToken);
        $this->setAccessTokenValidationPeriodInSeconds($tokenExpiresTime);
        $this->setRefreshTokenValidationPeriodInSeconds($refreshTokenExpiresTime);
        $this->setAccessTokenExpiresAt(time() + $tokenExpiresTime);
        $this->setRefreshTokenExpiresAt(time() + $refreshTokenExpiresTime);
+       $this->setIdToken($idToken);
     }
 
     /**

@@ -1,6 +1,6 @@
 {
     "name": "wssi/quickbooks-v3-php-sdk",
-    "description": "A Custom Version of the PHP SDK for QuickBooks Online Accounting API",
+    "description": "A Custom PHP SDK for QuickBooks Online Accounting API - Adds 'id_token' to AccessTokenObj for use in OpenID Connect protocol.",
     "type": "library",
     "keywords": ["api", "http", "rest", "quickbooks", "smallbusiness"],
     "homepage": "http://developer.intuit.com",
