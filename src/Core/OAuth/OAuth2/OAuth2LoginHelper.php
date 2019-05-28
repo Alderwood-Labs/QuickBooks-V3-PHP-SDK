@@ -335,7 +335,7 @@ class OAuth2LoginHelper
      * @param String $scope                 The scope of the key
      * @return OAuth2AccessToken
      */
-    public function OAuth1ToOAuth2Migration($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret, $scope){
+    public function OAuth1ToOAuth2Migration($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret, $scope, $url){
         $oauth1Encrypter = new OAuth1($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
         $parameters = array(
           'scope' => $scope,
@@ -343,7 +343,7 @@ class OAuth2LoginHelper
           'client_id' => $this->getClientID(),
           'client_secret' => $this->getClientSecret()
         );
-        $baseURL = "https://developer.api.intuit.com/v2/oauth2/tokens/migrate";
+        $baseURL = $url;
         $authorizationHeaderInfo = $oauth1Encrypter->getOAuthHeader($baseURL, array(), "POST");
         $http_header = array(
           'Accept' => 'application/json',
