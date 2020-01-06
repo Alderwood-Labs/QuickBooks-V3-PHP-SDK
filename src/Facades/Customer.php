@@ -13,6 +13,12 @@ class Customer{
      * This is an immutable function
      */
     public static function update($objToUpdate, array $data){
+
+        // Modified error handling on null
+        if($objToUpdate === null) {
+            throw new \Exception('Target Customer object instance expected, instead given null');
+        }
+
         $classOfObj = get_class($objToUpdate);
         if(strcmp($classOfObj, FacadeHelper::simpleAppendClassNameSpace("Customer")) != 0){
             throw new \Exception("Target object class:{" .  $classOfObj . "} is not an instance of Customer.");
