@@ -3,15 +3,16 @@ namespace QuickBooksOnline\API\Data;
 
 /**
  * @xmlNamespace http://schema.intuit.com/finance/v3
- * @xmlType PurchaseByVendor
- * @xmlName IPPVendorCredit
- * @var IPPVendorCredit
- * @xmlDefinition Bill is an AP transaction representing a
-				request-for-payment from a third party for goods/services rendered
-				and/or received
+ * @xmlType IntuitEntity
+ * @xmlName IPPConvenienceFeeDetail
+ * @var IPPConvenienceFeeDetail
+ * @xmlDefinition 
+				Product: QBO
+				Description: Internal use only: Convenience Fee detail for the invoice
+			
  */
-class IPPVendorCredit
-	extends IPPPurchaseByVendor	{
+class IPPConvenienceFeeDetail
+	extends IPPIntuitEntity	{
 
 		/**                                                                       
 		* Initializes this object, optionally with pre-defined property values    
@@ -26,7 +27,7 @@ class IPPVendorCredit
 		{
 			foreach($keyValInitializers as $initPropName => $initPropVal)
 			{
-				if (property_exists('IPPVendorCredit',$initPropName) || property_exists('QuickBooksOnline\API\Data\IPPVendorCredit',$initPropName))
+				if (property_exists('IPPConvenienceFeeDetail',$initPropName) || property_exists('QuickBooksOnline\API\Data\IPPConvenienceFeeDetail',$initPropName))
 				{
 					$this->{$initPropName} = $initPropVal;
 				}
@@ -40,44 +41,29 @@ class IPPVendorCredit
 
 	
 	/**
-	 * @Definition Internal use only: extension place holder for
-								Bill extensible element to qualify account.
-	 * @xmlType element
-	 * @xmlNamespace http://schema.intuit.com/finance/v3
-	 * @xmlMinOccurs 0
-	 * @xmlName VendorCreditEx
-	 * @var com\intuit\schema\finance\v3\IPPIntuitAnyType
-	 */
-	public $VendorCreditEx;
-	/**
 	 * @Definition 
-								Product: ALL
-								Description: The unpaid amount of the bill. When paid-in-full, balance will
-								be zero.
-								[b]QuickBooks Notes[/b][br /]
-								Non QB-writable.
-								Filterable: QBW
-								Sortable: QBW
+								Product: QBO
+								Description: Internal use only: Convenience fee type
 							
 	 * @xmlType element
 	 * @xmlNamespace http://schema.intuit.com/finance/v3
 	 * @xmlMinOccurs 0
-	 * @xmlName Balance
+	 * @xmlName ConvenienceFeeType
+	 * @var com\intuit\schema\finance\v3\IPPConvenienceFeeTypeEnum
+	 */
+	public $ConvenienceFeeType;
+	/**
+	 * @Definition 
+								Product: QBO
+								Description: Internal use only: Convenience fee rate percentage
+							
+	 * @xmlType element
+	 * @xmlNamespace http://schema.intuit.com/finance/v3
+	 * @xmlMinOccurs 0
+	 * @xmlName ConvenienceFeePercent
 	 * @var float
 	 */
-	public $Balance;
-	/**
-	 * @Definition 
-								Product: QBO Only
-								Description: True if the VendorCredit should be included in annual TPAR, specific to AU region.
-							
-	 * @xmlType element
-	 * @xmlNamespace http://schema.intuit.com/finance/v3
-	 * @xmlMinOccurs 0
-	 * @xmlName IncludeInAnnualTPAR
-	 * @var boolean
-	 */
-	public $IncludeInAnnualTPAR;
+	public $ConvenienceFeePercent;
 
 
-} // end class IPPVendorCredit
+} // end class IPPConvenienceFeeDetail
