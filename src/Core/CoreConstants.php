@@ -7,7 +7,7 @@ namespace QuickBooksOnline\API\Core;
 class CoreConstants
 {
     //Set the default minor version to 23
-    const DEFAULT_SDK_MINOR_VERSION = "36";
+    const DEFAULT_SDK_MINOR_VERSION = "45";
     const DEFAULT_LOGGINGLOCATION = "/tmp/IdsLogs";
 
     const PHP_CLASS_PREFIX = 'IPP';
