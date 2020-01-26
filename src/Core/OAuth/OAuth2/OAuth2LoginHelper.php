@@ -209,23 +209,28 @@ class OAuth2LoginHelper
 
     /**
      * Retrieve the users OpenID Connect profile
-     * @return array the user's profile
-     */
-    public function getUserInfo(String $url, String $accessToken)
-    {
-      $http_header = array(
-        'Accept' => 'application/json',
-        'Authorization' => 'Bearer ' . $accessToken,
-      );
-      $intuitResponse = $this->curlHttpClient->makeAPICall($url, CoreConstants::HTTP_GET, $http_header, null, null, true);
-      $this->faultHandler = $intuitResponse->getFaultHandler();
-      if($this->faultHandler) {
-          throw new ServiceException("Fetching User Info failed. Body: [" . $this->faultHandler->getResponseBody() . "].", $this->faultHandler->getHttpStatusCode());
-      }else{
-          $this->faultHandler = false;
-          return json_decode($intuitResponse->getBody(), true);
-      }
-    }
+     * 
+     * This function was lovingly handwritten by WCV, only to be deprecated when
+     * this package got around to supporting these methods.
+    * 
+    * @return array the user's profile
+    */
+    
+    // public function getUserInfo(String $url, String $accessToken)
+    // {
+    //   $http_header = array(
+    //     'Accept' => 'application/json',
+    //     'Authorization' => 'Bearer ' . $accessToken,
+    //   );
+    //   $intuitResponse = $this->curlHttpClient->makeAPICall($url, CoreConstants::HTTP_GET, $http_header, null, null, true);
+    //   $this->faultHandler = $intuitResponse->getFaultHandler();
+    //   if($this->faultHandler) {
+    //       throw new ServiceException("Fetching User Info failed. Body: [" . $this->faultHandler->getResponseBody() . "].", $this->faultHandler->getHttpStatusCode());
+    //   }else{
+    //       $this->faultHandler = false;
+    //       return json_decode($intuitResponse->getBody(), true);
+    //   }
+    // }
 
     /**
      * Step 2 of OAuth 2 protocol. After you get authorization code, use this method to exchange an access token with it.
