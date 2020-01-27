@@ -458,7 +458,11 @@ class OAuth2LoginHelper
               $refreshToken = $json_body[CoreConstants::OAUTH2_REFRESH_GRANTYPE];
               $refreshTokenExpiresTime = $json_body[CoreConstants::X_REFRESH_TOKEN_EXPIRES_IN];
               $accessToken = $json_body[CoreConstants::ACCESS_TOKEN];
-              $idToken = $json_body[CoreConstants::ID_TOKEN];
+              //$idToken = $json_body[CoreConstants::ID_TOKEN];
+
+              // Optional idToken, not expected in request but used if present
+              $idToken = null;
+              
               if(array_key_exists("id_token", $json_body) && isset($json_body["id_token"]) && !empty($json_body["id_token"])){
                 $idToken = $json_body["id_token"];
                 $result = $this->validateIDToken($idToken);

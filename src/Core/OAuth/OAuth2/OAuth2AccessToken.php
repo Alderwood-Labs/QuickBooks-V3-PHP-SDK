@@ -367,14 +367,17 @@ class OAuth2AccessToken{
      * @param int      $refreshTokenExpiresTime   The number of seconds that refresh token expired. Always 8726400 seconds.
      * @param String   $accessToken               The OAuth 2 Access Token returned from refresh token API call or generated from a new request.
      */
-    public function updateAccessToken($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken, $idToken){
+    public function updateAccessToken($tokenExpiresTime, $refreshToken, $refreshTokenExpiresTime, $accessToken, $idToken = null){
        $this->setAccessToken($accessToken);
        $this->setRefreshToken($refreshToken);
        $this->setAccessTokenValidationPeriodInSeconds($tokenExpiresTime);
        $this->setRefreshTokenValidationPeriodInSeconds($refreshTokenExpiresTime);
        $this->setAccessTokenExpiresAt(time() + $tokenExpiresTime);
        $this->setRefreshTokenExpiresAt(time() + $refreshTokenExpiresTime);
-       $this->setIdToken($idToken);
+
+       if($idToken) {
+        $this->setIdToken($idToken);
+       }
     }
 
     /**
