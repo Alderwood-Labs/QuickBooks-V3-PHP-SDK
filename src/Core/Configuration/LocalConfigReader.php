@@ -91,6 +91,8 @@ class LocalConfigReader
             LocalConfigReader::initializeRequestAndResponseSerializationAndCompressionFormat($xmlObj, $ippConfig);
             LocalConfigReader::initializeServiceBaseURLAndLogger($xmlObj, $ippConfig);
             LocalConfigReader::initializeAPIEntityRules($xmlObj, $ippConfig);
+
+            LocalConfigReader::setIncludeInvoiceLinkFromXML($ippConfig, $xmlObj);
             LocalConfigReader::setupMinorVersion($ippConfig, $xmlObj);
 
             return $ippConfig;
@@ -99,7 +101,12 @@ class LocalConfigReader
         }
     }
 
-    public static function ReadConfigurationFromParameters($OAuthConfig, $baseUrl, $defaultLoggingLocation = CoreConstants::DEFAULT_LOGGINGLOCATION, $minorVersion = CoreConstants::DEFAULT_SDK_MINOR_VERSION)
+    public static function ReadConfigurationFromParameters(
+        $OAuthConfig,
+        $baseUrl,
+        $defaultLoggingLocation = CoreConstants::DEFAULT_LOGGINGLOCATION,
+        $minorVersion = CoreConstants::DEFAULT_SDK_MINOR_VERSION,
+        $includeInvoiceLink = CoreConstants::DEFAULT_INCLUDE_INVOICE_LINK)
     {
         $ippConfig = new IppConfiguration();
         try {
@@ -126,6 +133,10 @@ class LocalConfigReader
                 //Set API Entity Rules
                 $rules=CoreConstants::getQuickBooksOnlineAPIEntityRules();
                 LocalConfigReader::initOperationControlList($ippConfig, $rules);
+
+                // Set controls for '&include=InvoiceLink' in generated querystring
+                LocalConfigReader::setIncludeInvoiceLinkSetting($ippConfig, $includeInvoiceLink);
+
                 //Set minor version
                 $ippConfig->minorVersion = $minorVersion;
 
@@ -162,6 +173,51 @@ class LocalConfigReader
       $ippConfig->OpControlList->appendRules($array);
   }
 
+  /**
+   * Changes the state of the IncludeInvoiceLink setting given an 
+   * IppConfiguration object. Validates property type. 
+   *
+   * @param IppConfiguration $ippConfig
+   * @param boolean $include
+   * @return void
+   */
+  public static function setIncludeInvoiceLinkSetting($ippConfig, $include) {
+    // Validate type or throw exception...  
+    if(!(gettype($include) === "boolean")) {
+          try {
+              // Attempt force cast to bool
+              $include = (bool) $include;
+            } catch(\Exception $e) {
+              throw new \Exception(
+                  'Unable to set IncludeInvoiceLink, cannot interpet value as boolean.',
+                  null,
+                $e
+            );
+          }
+      }
+
+      // Set!
+      $ippConfig->IncludeInvoiceLink = $include;
+  }
+
+   /**
+    * Extracts IncludeInvoiceLink setting for use in XML file context
+    * @param IppConfiguration $ippConfig
+    * @param \SimpleXMLElement $xmlObj
+    * @return void
+    */
+    public static function setIncludeInvoiceLinkFromXML($ippConfig, $xmlObj)
+    {
+        $settingIsPresent = isset($xmoObj)
+            && isset($xmlObj->intuit->ipp->IncludeInvoiceLink);
+        
+        if($settingIsPresent) {
+            $include = (bool) $xmlObj->intuit->ipp->IncludeInvoiceLink;
+            LocalConfigReader::setIncludeInvoiceLinkSetting($ippConfig, $include);
+        }
+    }
+
+
    /**
     * Initializes operation contrtol list
     * @param IppConfiguration $ippConfig
@@ -174,7 +230,6 @@ class LocalConfigReader
            $ippConfig->minorVersion = (int) $xmlObj->intuit->ipp->minorVersion;
        }
    }
-
 
 
    /**

@@ -38,11 +38,20 @@ class SyncRestHandler extends RestHandler
     */
     private $context = null;
 
+    /**
+     * Regex expression that detects an IPPInvoice SELECT statement so we
+     * can append "include" querystring parameters (if enabled).
+     * 
+     * @var string [regex pattern]
+     */
+    private $rgxMatchInvoiceQuery;
+
    /**
     * The Http Client that is used to make QuickBooks Online API call
     * @var HttpClientInterface
     */
     private $httpClientInterface;
+
 
    /**
     * Initializes a new instance of the SyncRestHandler class.
@@ -55,6 +64,9 @@ class SyncRestHandler extends RestHandler
         parent::__construct($context);
         $this->context = $context;
         $this->httpClientInterface = isset($client) ? $client : new CurlHttpClient();
+
+        // InvoiceLink support: Make sure not to match COUNT(*) queries!
+        $this->rgxMatchInvoiceQuery = '/^SELECT (?:(?!COUNT).*) FROM Invoice ?(.*)$/';
     }
 
    /**
@@ -106,6 +118,8 @@ class SyncRestHandler extends RestHandler
         $oMode = $this->context->IppConfiguration->OAuthMode;
         // Determine dest URI
         $requestUri = $this->getDestinationURL($requestParameters, $oMode, $specifiedRequestUri);
+        // InvoiceLink support
+        $requestUri = $this->appendIncludeInvoiceLinkToRequestURI($requestUri, $requestBody);
         //minorVersion support
         $requestUri = $this->appendMinorVersionToRequestURI($requestUri);
         //Check for the HTTP method
@@ -347,6 +361,43 @@ class SyncRestHandler extends RestHandler
 
       return $requestUri;
     }
+
+
+    /**
+     * Append include InvoiceLink parameter for appropriate requests.
+     *
+     * @param String requestUri
+     * @param String requestBody
+     * @return String new requestUri, possibly with querystring "includes"
+     */
+    private function appendIncludeInvoiceLinkToRequestURI($requestUri, $requestBody){
+        // We don't need to check queries if the setting is disabled.
+        $includeLink = ((bool) $this->context->IncludeInvoiceLink) === true;
+    
+        if (isset($requestBody) && $includeLink) {
+            // Detect only SELECT (..) INVOICE queries
+            $isInvoiceQuery = (bool) preg_match(
+                $this->rgxMatchInvoiceQuery,
+                $requestBody
+            );
+
+            // TODO: Fix everywhere that uses this pattern. Use `http_build_query`.
+            if($isInvoiceQuery === true) {
+                // This is *not* the ideal way to handle querystring params.
+                // It is, however, consistent with the usage in this SDK.
+                
+                // < weird detection of existing params to `false` >
+                if($this->queryToArray($requestUri) == false) {
+                    $requestUri .= '?include=InvoiceLink';
+                } else {
+                    $requestUri .= '&include=InvoiceLink';
+                }
+            }
+
+        }
+        return $requestUri;
+      }
+
 
     /**
      * Append Minor Version to the URI

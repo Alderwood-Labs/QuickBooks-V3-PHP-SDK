@@ -165,8 +165,23 @@ class ServiceContext
            $OAuthConfig->setRealmID($QBORealmID);
            $OAuthConfig->setBaseURL($checkedBaseURL);
         }
+
+
         $serviceType = CoreConstants::IntuitServicesTypeQBO;
-        $IppConfiguration = LocalConfigReader::ReadConfigurationFromParameters($OAuthConfig, $checkedBaseURL, CoreConstants::DEFAULT_LOGGINGLOCATION, CoreConstants::DEFAULT_SDK_MINOR_VERSION);
+
+        // Allow default InvoiceLink setting in CoreConstants to be overriden with explicit option
+        $includeInvoiceLink = array_key_exists('includeInvoiceLink', $settings) ?
+                                $settings['includeInvoiceLink'] :
+                                CoreConstants::DEFAULT_INCLUDE_INVOICE_LINK;
+
+        $IppConfiguration = LocalConfigReader::ReadConfigurationFromParameters(
+            $OAuthConfig,
+            $checkedBaseURL,
+            CoreConstants::DEFAULT_LOGGINGLOCATION,
+            CoreConstants::DEFAULT_SDK_MINOR_VERSION,
+            $includeInvoiceLink
+        );
+
         $serviceContextInstance = new ServiceContext($QBORealmID, $serviceType, $OAuthConfig, $IppConfiguration);
         return $serviceContextInstance;
     }

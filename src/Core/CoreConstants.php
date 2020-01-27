@@ -46,6 +46,9 @@ class CoreConstants
      */
     const CLIENT_GUZZLE_FULL = 'guzzlehttp';
 
+    // Returning URL with invoice disabled by default
+    const DEFAULT_INCLUDE_INVOICE_LINK = false;
+
     /**
      * No compression.
      * @var int None
@@ -415,4 +418,6 @@ class CoreConstants
 
     //AutoLoader Settings
     const USE_AUTOLOADER = true;
+
+ 
 }

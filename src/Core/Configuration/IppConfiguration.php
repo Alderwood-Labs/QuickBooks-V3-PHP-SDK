@@ -60,6 +60,12 @@ class IppConfiguration
     public $minorVersion;
 
     /**
+     * When true, requests InvoiceLink with IPPInvoice queries
+     * @var IncludeInvoiceLink
+     */
+    public $IncludeInvoiceLink;
+
+    /**
      * Contains value for SSL check
      * @var Boolean
      */
