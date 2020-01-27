@@ -371,30 +371,33 @@ class SyncRestHandler extends RestHandler
      * @return String new requestUri, possibly with querystring "includes"
      */
     private function appendIncludeInvoiceLinkToRequestURI($requestUri, $requestBody){
-        // We don't need to check queries if the setting is disabled.
-        $includeLink = ((bool) $this->context->IncludeInvoiceLink) === true;
-    
-        if (isset($requestBody) && $includeLink) {
-            // Detect only SELECT (..) INVOICE queries
-            $isInvoiceQuery = (bool) preg_match(
-                $this->rgxMatchInvoiceQuery,
-                $requestBody
-            );
+        if(isset($this->context->IppConfiguration->IncludeInvoiceLink)) {
+            // We don't need to check queries if the setting is disabled.
+            $includeLink = ((bool) $this->context->IncludeInvoiceLink) === true;
+        
+            if (isset($requestBody) && $includeLink) {
+                // Detect only SELECT (..) INVOICE queries
+                $isInvoiceQuery = (bool) preg_match(
+                    $this->rgxMatchInvoiceQuery,
+                    $requestBody
+                );
 
-            // TODO: Fix everywhere that uses this pattern. Use `http_build_query`.
-            if($isInvoiceQuery === true) {
-                // This is *not* the ideal way to handle querystring params.
-                // It is, however, consistent with the usage in this SDK.
-                
-                // < weird detection of existing params to `false` >
-                if($this->queryToArray($requestUri) == false) {
-                    $requestUri .= '?include=InvoiceLink';
-                } else {
-                    $requestUri .= '&include=InvoiceLink';
+                // TODO: Fix everywhere that uses this pattern. Use `http_build_query`.
+                if($isInvoiceQuery === true) {
+                    // This is *not* the ideal way to handle querystring params.
+                    // It is, however, consistent with the usage in this SDK.
+                    
+                    // < weird detection of existing params to `false` >
+                    if($this->queryToArray($requestUri) == false) {
+                        $requestUri .= '?include=InvoiceLink';
+                    } else {
+                        $requestUri .= '&include=InvoiceLink';
+                    }
                 }
-            }
 
+            }
         }
+        
         return $requestUri;
       }
 
