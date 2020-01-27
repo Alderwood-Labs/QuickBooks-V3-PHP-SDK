@@ -371,9 +371,12 @@ class SyncRestHandler extends RestHandler
      * @return String new requestUri, possibly with querystring "includes"
      */
     private function appendIncludeInvoiceLinkToRequestURI($requestUri, $requestBody){
-        if(isset($this->context->IppConfiguration->IncludeInvoiceLink)) {
+
+        $ippConfig = $this->context->IppConfiguration;
+
+        if(isset($ippConfig->IncludeInvoiceLink)) {
             // We don't need to check queries if the setting is disabled.
-            $includeLink = ((bool) $this->context->IncludeInvoiceLink) === true;
+            $includeLink = ((bool) $ippConfig->IncludeInvoiceLink) === true;
         
             if (isset($requestBody) && $includeLink) {
                 // Detect only SELECT (..) INVOICE queries
